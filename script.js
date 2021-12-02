@@ -7,11 +7,13 @@ class CubeGame {
     }
 
     clearGame() {
-        // Clear the interval
+        // Clear the intervals
         clearInterval(startTimer);
+        clearInterval(startMissTimer);
 
-        // Set display to none for the div with id "game-over" so it is not visible
+        // Set display to none for the div with id "game-over" and "lives" so it is not visible
         document.getElementById("game-over").style.display = "none";
+        document.getElementById("missed").style.display = "none";
 
         // Set score and lives to default values
         score = 0;
@@ -42,13 +44,13 @@ class CubeGame {
         // Do switch on selected difficulty
         switch (difficulty) {
             case "Easy":
-                selectedDifficultyColors = shuffle(cubeColorsEasy)
+                selectedDifficultyColors = shuffle(cubeColorsEasy);
                 break;
             case "Medium":
-                selectedDifficultyColors = shuffle(cubeColorsMedium)
+                selectedDifficultyColors = shuffle(cubeColorsMedium);
                 break;
             case "Hard":
-                selectedDifficultyColors = shuffle(cubeColorsHard)
+                selectedDifficultyColors = shuffle(cubeColorsHard);
                 break;
         }
 
@@ -62,7 +64,7 @@ class CubeGame {
         selectDifficultyButtons.forEach(button => {
             button.setAttribute("disabled", "disabled");
         })
-        resetTextElement.removeAttribute("disabled")
+        resetTextElement.removeAttribute("disabled");
 
         // Set innerText for difficultyTextElement
         this.difficultyTextElement.innerText = `Difficulty: ${difficulty}`;
@@ -123,16 +125,25 @@ class CubeGame {
         // Take of 1 live
         lives = lives - 1;
 
-        // Set innerText for livesTextElement to the amount of lives left
-        this.livesTextElement.innerText = `Lives: ${lives}`;
-
         // Check amount of lives
         if (lives === 0) {
             clearInterval(startTimer);
             this.gameOver();
         } else {
             clearInterval(startTimer);
-            this.setTimer(selectedDifficultyColors, time);
+
+            for (let i = 0; i < 10; i++) {
+                document.getElementById("b-" + (i)).setAttribute("disabled","disabled");
+            }
+
+            // Set innerText for livesTextElement to the amount of lives left
+            livesTextElement.innerText = `Lives: ${lives}`;
+            missLivesTextElement.innerText = `Lives left: ${lives}`;
+
+            document.getElementById("missed").style.display = "grid";
+
+            changeColorsMiss();
+            startMissTimer = setInterval(changeColorsMiss, 500);
         }
     }
 
@@ -163,15 +174,19 @@ const livesTextElement = document.querySelector('[data-lives]');
 const difficultyTextElement = document.querySelector('[data-difficulty]');
 const resetTextElement = document.querySelector('[data-reset]');
 const endScoreTextElement = document.querySelector('[data-end-score]');
+const missLivesTextElement = document.querySelector('[data-lives-miss]');
 
 let selectedDifficultyColors;
 let startTimer;
+let startMissTimer;
 let score = 0;
 let lives = 3;
 let time = 2000;
+let counts = 0;
 let cubeColorsEasy = ["#2e157b", "#1b0427", "#3ce10a", "#f16c87", "#17a8a8", "#daae88", "#f3dea5", "#9a1b7b", "#42cef8"];
 let cubeColorsMedium = ["#cb1e7d", "#f04295", "#f316a9", "#4fc83a", "#54cf2b", "#66db8c", "#283032", "#14121f", "#110628"];
 let cubeColorsHard = ["#E5E8E8", "#CCD1D1", "#B2BABB", "#99A3A4", "#7F8C8D", "#707B7C", "#616A6B", "#515A5A", "#424949"];
+let cubeColorsMiss = ["#dc143c", "#b22222", "#8b0000", "#800000", "#c80815", "#dc143c", "#b22222", "#8b0000", "#800000"];
 
 const cubeGame = new CubeGame(scoreTextElement, livesTextElement, difficultyTextElement);
 
@@ -188,6 +203,31 @@ function shuffle(cubeColorsArray) {
     return cubeColorsArray;
 }
 
+// When pressed the wrong color
+function changeColorsMiss() {
+    counts += 1;
+    // cubeColorsMiss
+    selectedColors = shuffle(cubeColorsMiss);
+    for (let i = 0; i < selectedColors.length; i++) {
+        document.getElementById("b-" + (i + 1)).style.backgroundColor = selectedColors[i];
+        document.getElementById("b-" + (i + 1)).name = selectedColors[i];
+    }
+    let randomNumber = Math.floor(Math.random() * 9);
+    document.getElementById("b-0").style.backgroundColor = selectedColors[randomNumber];
+    document.getElementById("b-0").name = selectedColors[randomNumber];
+
+    if (counts === 7) {
+        counts = 0;
+        clearInterval(startMissTimer);
+        document.getElementById("missed").style.display = "none";
+        for (let i = 0; i < 10; i++) {
+            document.getElementById("b-" + (i)).removeAttribute("disabled");
+        }
+        cubeGame.setTimer(selectedDifficultyColors, time);
+    }
+}
+
+// Just change colors on the board
 function changeColors(selectedColors) {
     selectedColors = shuffle(selectedColors);
     for (let i = 0; i < selectedColors.length; i++) {

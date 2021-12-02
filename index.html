@@ -13,9 +13,14 @@
 </head>
 <body>
     <div class="game-over" id="game-over">
-        <span >GAME OVER</span>
+        <span>GAME OVER</span>
         <span data-end-score class="game-over-score" id="game-over-score"></span>
         <a href="" class="game-over-restart" id="game-over-restart">RESTART</a>
+    </div>
+
+    <div class="missed" id="missed">
+        <span>MISSED</span>
+        <span data-lives-miss class="game-lives" id="game-lives"></span>
     </div>
 
     <div style="text-align: center; margin-top: 10px">
@@ -27,8 +32,8 @@
 
     <div class="cube-grid">
         <div class="output">
-            <div data-score class="previous-operand"></div>
-            <div data-lives class="previous-operand"></div>
+            <div data-score></div>
+            <div data-lives></div>
             <div data-difficulty class="current-operand"></div>
         </div>
         <button data-select id="b-1"></button>
@@ -42,24 +47,5 @@
         <button data-select id="b-9"></button>
         <button id="b-0" class="span-three"></button>
     </div>
-
-<!--    <table id="Game">-->
-<!--        <tr>-->
-<!--            <td id="td1" onclick="colorGame(this)"></td>-->
-<!--            <td id="td2" onclick="colorGame(this)"></td>-->
-<!--            <td id="td3" onclick="colorGame(this)"></td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--            <td id="td4" onclick="colorGame(this)"></td>-->
-<!--            <td id="td5" onclick="colorGame(this)"></td>-->
-<!--            <td id="td6" onclick="colorGame(this)"></td>-->
-<!--        </tr>-->
-<!--        <tr>-->
-<!--            <td id="td7" onclick="colorGame(this)"></td>-->
-<!--            <td id="td8" onclick="colorGame(this)"></td>-->
-<!--            <td id="td9" onclick="colorGame(this)"></td>-->
-<!--        </tr>-->
-<!--        <tr><td colspan="3" id="change" class="text	"></td></tr>-->
-<!--    </table>-->
 </body>
 </html>
